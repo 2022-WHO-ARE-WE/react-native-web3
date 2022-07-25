@@ -1,4 +1,8 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import WalletConnectProvider from '@walletconnect/react-native-dapp';
 import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
 
@@ -15,10 +19,19 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        <RecoilRoot>
-          <Navigation colorScheme={colorScheme} />
-          <StatusBar />
-        </RecoilRoot>
+        <WalletConnectProvider
+          redirectUrl={
+            Platform.OS === 'web' ? window.location.origin : 'yourappscheme://'
+          }
+          storageOptions={{
+            asyncStorage: AsyncStorage as any,
+          }}
+        >
+          <RecoilRoot>
+            <Navigation colorScheme={colorScheme} />
+            <StatusBar />
+          </RecoilRoot>
+        </WalletConnectProvider>
       </SafeAreaProvider>
     );
   }
